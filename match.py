@@ -4,8 +4,7 @@ class Match(object):
     highlight_start = '\033[91m' # red
     highlight_end = '\033[0m'
 
-    def __init__(self, word, token_ids, sent_id, doc_id):
-        self.word = word
+    def __init__(self, token_ids, sent_id, doc_id):
         self.token_ids = token_ids
         self.sent_id = sent_id
         self.doc_id = doc_id

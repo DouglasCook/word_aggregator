@@ -33,7 +33,7 @@ class Processor(object):
                 self.sents.append(Sentence(sent_id, doc_id, sent))
                 sent_id += 1
             self.counter.update(
-                [self.normalise_token(t) for t in doc if spacy_.is_good_word(t)])
+                [self.normalise_token(t) for t in doc if spacy_.is_interesting_word(t)])
 
     def get_most_common_words(self, number):
         """Return list containing matches for given number of most commonly
@@ -48,7 +48,7 @@ class Processor(object):
         for sent in self.sents:
             match_index = [t.i for t in sent.tokens if self.normalise_token(t) == orth]
             if match_index:
-                all_matches.append(Match(orth, match_index, sent.id, sent.doc_id))
+                all_matches.append(Match(match_index, sent.id, sent.doc_id))
         return all_matches
 
     def load_parsed_docs(self):
@@ -62,5 +62,7 @@ class Processor(object):
         return token.lower
 
     def display_results(self, number):
+        """Disaply results with formatter instance."""
         self.formatter.display_output(self.get_most_common_words(number),
-                                      self.loader.file_paths)
+                                      self.loader.file_paths,
+                                      self.sents)

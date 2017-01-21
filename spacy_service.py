@@ -11,12 +11,10 @@ def parse_docs(files):
 
 
 def convert_to_string(orth):
+    """Return a string given its id."""
     return NLP.vocab.strings[orth]
 
 
-def convert_to_lexeme(orth):
-    return Lexeme(NLP.vocab, orth)
-
-
-def is_good_word(word):
+def is_interesting_word(word):
+    """Return false for punctuation or stopword tokens."""
     return word.is_alpha and not word.is_stop
