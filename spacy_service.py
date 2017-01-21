@@ -2,6 +2,9 @@
 import spacy
 from spacy.lexeme import Lexeme
 
+from word_aggregator.logger import logger
+
+logger.info('Loading spacy assets')
 NLP = spacy.load('en')
 
 

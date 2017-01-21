@@ -2,6 +2,7 @@ from collections import Counter, namedtuple
 
 import word_aggregator.spacy_service as spacy_
 from word_aggregator.match import Match
+from word_aggregator.logger import logger
 
 
 Sentence = namedtuple('Sentence', ['id', 'doc_id', 'tokens'])
@@ -29,6 +30,7 @@ class Processor(object):
         docs = self.load_parsed_docs()
         sent_id = 0
         for doc_id, doc in enumerate(docs):
+            logger.info(f'Processing document {doc_id}')
             for sent in doc.sents:
                 self.sents.append(Sentence(sent_id, doc_id, sent))
                 sent_id += 1
@@ -38,8 +40,10 @@ class Processor(object):
     def get_most_common_words(self, number):
         """Return list containing matches for given number of most commonly
         occurring words."""
+        logger.info('Gathering most common words')
         most_common = [(orth, count, self.build_matches(orth))
                        for orth, count in self.counter.most_common(number)]
+        logger.info('Processing complete')
         return most_common
 
     def build_matches(self, orth):
