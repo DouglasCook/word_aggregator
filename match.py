@@ -4,7 +4,8 @@ class Match():
     highlight_start = '\033[91m' # red
     highlight_end = '\033[0m'
 
-    def __init__(self, token_ids, sent_id, doc_id):
+    def __init__(self, word, token_ids, sent_id, doc_id):
+        self.word = word
         self.token_ids = token_ids
         self.sent_id = sent_id
         self.doc_id = doc_id
@@ -12,7 +13,7 @@ class Match():
     def format_sentence(self, sentences):
         """Return sentence for this match with match locations highlighted."""
         formatted = [self.format_token(t) for t in sentences[self.sent_id].tokens]
-        return ''.join(formatted)
+        return ''.join(formatted).strip()
 
     def format_token(self, token):
         """Return plain or highlighted version of given token."""

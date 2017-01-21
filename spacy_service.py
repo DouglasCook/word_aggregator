@@ -1,6 +1,13 @@
+"""Singleton spacy instance for all other modules to use."""
+import spacy
 from spacy.lexeme import Lexeme
 
-from word_aggregator.spacy_instance import NLP
+NLP = spacy.load('en')
+
+
+def parse_docs(files):
+    """Return generator of all parsed files."""
+    return NLP.pipe(files)
 
 
 def convert_to_string(orth):
