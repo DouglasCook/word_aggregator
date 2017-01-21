@@ -2,7 +2,6 @@ from collections import Counter, namedtuple
 
 import word_aggregator.spacy_service as spacy_
 from word_aggregator.match import Match
-from word_aggregator.loader import Loader
 
 
 Sentence = namedtuple('Sentence', ['id', 'doc_id', 'tokens'])
@@ -73,10 +72,3 @@ class Processor():
             for m in matches:
                 print(f'\nIn {self.loader.file_paths[m.doc_id]}')
                 print(m.format_sentence(self.sents))
-
-
-if __name__ == '__main__':
-    LOADER = Loader('./docs')
-    PROCESSOR = Processor(LOADER, lemmatise=True)
-    PROCESSOR.process_documents()
-    PROCESSOR.display_output(30)
