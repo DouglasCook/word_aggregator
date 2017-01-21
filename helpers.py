@@ -1,5 +1,6 @@
-from word_aggregator.spacy_instance import NLP
 from spacy.lexeme import Lexeme
+
+from word_aggregator.spacy_instance import NLP
 
 
 def convert_to_string(orth):
