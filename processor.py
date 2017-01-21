@@ -7,7 +7,20 @@ from word_aggregator.loader import Loader
 
 
 Sentence = namedtuple('Sentence', ['id', 'doc_id', 'tokens'])
-Match = namedtuple('Match', ['id', 'token', 'sent_id'])
+
+
+class Match():
+
+    def __init__(self, token_id, token, sent_id):
+        # TODO deal with case where there are multiple matches in one sentence
+        self.token_id = token_id
+        self.token = token
+        self.sent_id = sent_id
+
+    def format_(self, sentences):
+        sent = sentences[self.sent_id]
+        # instead of token can do sent[self.token_id]
+        return (sent.tokens, self.token, sent.doc_id)
 
 
 class Processor():
@@ -26,11 +39,13 @@ class Processor():
             self.counter.update(
                 [t.lower for t in doc if helpers.is_good_word(t)])
 
+    def show_me(self, number):
+        for matches in self.get_most_common(number):
+            print([m.format_(self.sents) for m in matches])
+
     def get_most_common(self, number):
         most_common = [self.build_matches(orth)
                        for orth, _ in self.counter.most_common(number)]
-        for matches in most_common:
-            formatted = [self.format_match(m) for m in matches]
         return most_common
 
     def build_matches(self, orth):
@@ -41,10 +56,6 @@ class Processor():
             all_matches.extend(matches)
         return all_matches
 
-    def format_match(self, match):
-        sent = self.sents[match.sent_id]
-        return (sent.tokens, sent.tokens[match.id], sent.doc_id)
-
 
 if __name__ == '__main__':
     loader = Loader('./docs')
@@ -52,4 +63,4 @@ if __name__ == '__main__':
 
     processor = Processor()
     processor.process_documents(docs)
-    boom = processor.get_most_common(3)
+    boom = processor.show_me(3)
