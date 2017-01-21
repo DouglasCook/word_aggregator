@@ -7,19 +7,21 @@ from word_aggregator.match import Match
 Sentence = namedtuple('Sentence', ['id', 'doc_id', 'tokens'])
 
 
-class Processor():
+class Processor(object):
     """Class for processing documents and extracting most commonly occurring words."""
 
-    def __init__(self, loader, lemmatise=False):
+    def __init__(self, loader, formatter, lemmatise=False):
         """Constructor
 
         Args:
             loader: loader instance with read_files method
+            formatter: formatter instance with display_output method
             lemmatise: bool flag for lemmatising tokens instead of lowering
         """
+        self.loader = loader
+        self.formatter = formatter
         self.sents = []
         self.counter = Counter()
-        self.loader = loader
         self.lemmatise = lemmatise
 
     def process_documents(self):
@@ -33,12 +35,11 @@ class Processor():
             self.counter.update(
                 [self.normalise_token(t) for t in doc if spacy_.is_good_word(t)])
 
-    def get_most_common(self, number):
+    def get_most_common_words(self, number):
         """Return list containing matches for given number of most commonly
         occurring words."""
         most_common = [(orth, count, self.build_matches(orth))
                        for orth, count in self.counter.most_common(number)]
-        self.print_summary(most_common)
         return most_common
 
     def build_matches(self, orth):
@@ -60,15 +61,6 @@ class Processor():
             return token.lemma
         return token.lower
 
-    def print_summary(self, most_common):
-        print('SUMMARY')
-        for m in most_common:
-            print(f'{spacy_.convert_to_string(m[0])} : {m[1]}')
-        print('\n\n\n')
-
-    def display_output(self, number):
-        for orth, count, matches in self.get_most_common(number):
-            print(f'\n\nFound {count} instances of "{spacy_.convert_to_string(orth)}"')
-            for m in matches:
-                print(f'\nIn {self.loader.file_paths[m.doc_id]}')
-                print(m.format_sentence(self.sents))
+    def display_results(self, number):
+        self.formatter.display_output(self.get_most_common_words(number),
+                                      self.loader.file_paths)

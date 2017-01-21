@@ -1,8 +1,10 @@
 from word_aggregator.processor import Processor
-from word_aggregator.loader import Loader
+from word_aggregator.loader import TextFileLoader
+from word_aggregator.formatter import ConsoleFormatter
 
 
-LOADER = Loader('./docs')
-PROCESSOR = Processor(LOADER, lemmatise=True)
+LOADER = TextFileLoader('./docs')
+FORMATTER = ConsoleFormatter()
+PROCESSOR = Processor(LOADER, FORMATTER, lemmatise=True)
 PROCESSOR.process_documents()
-PROCESSOR.display_output(30)
+PROCESSOR.display_results(30)

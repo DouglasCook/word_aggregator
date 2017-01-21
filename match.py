@@ -1,4 +1,4 @@
-class Match():
+class Match(object):
     """A sentence with index containing locations of matches."""
 
     highlight_start = '\033[91m' # red

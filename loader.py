@@ -2,7 +2,7 @@ import os
 import glob
 
 
-class Loader():
+class TextFileLoader(object):
     """Class for reading text files from a directory."""
 
     def __init__(self, directory):
