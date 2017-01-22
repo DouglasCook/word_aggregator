@@ -14,12 +14,12 @@ from docopt import docopt
 
 from word_aggregator.processor import Processor
 from word_aggregator.loaders import TextFileLoader
-from word_aggregator.formatters import ConsoleFormatter
+from word_aggregator.formatters import ConsoleFormatter, CsvFormatter
 
 
 def main(directory, n_words, lemmatise):
     loader = TextFileLoader(directory)
-    formatter = ConsoleFormatter()
+    formatter = CsvFormatter()
     processor = Processor(loader, formatter, lemmatise=lemmatise)
     processor.process_documents()
     processor.display_results(n_words)
@@ -27,4 +27,4 @@ def main(directory, n_words, lemmatise):
 
 if __name__ == '__main__':
     args = docopt(__doc__)
-    main(args['<directory'], args['<n_words>'], args['--lemmatise'])
+    main(args['<directory>'], int(args['<n_words>']), args['--lemmatise'])

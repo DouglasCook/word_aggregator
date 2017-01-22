@@ -43,7 +43,6 @@ class Processor(object):
         logger.info('Gathering most common words')
         most_common = [(orth, count, self.build_matches(orth))
                        for orth, count in self.counter.most_common(number)]
-        logger.info('Processing complete')
         return most_common
 
     def build_matches(self, orth):
@@ -67,6 +66,6 @@ class Processor(object):
 
     def display_results(self, number):
         """Display results via formatter."""
-        self.formatter.display_output(self.get_most_common_words(number),
+        self.formatter.format_results(self.get_most_common_words(number),
                                       self.loader.file_paths,
                                       self.sents)
