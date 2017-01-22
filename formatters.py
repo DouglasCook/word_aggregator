@@ -18,8 +18,9 @@ class Formatter(object):
     def print_summary(self, results):
         """Print a summary of the most commonly occurring words."""
         print('SUMMARY OF WORD COUNTS')
-        for m in results:
-            print(f'{spacy_.convert_to_string(m[0])} : {m[1]}')
+        for res in results:
+            word = spacy_.convert_to_string(res.orth)
+            print(f'{word} : {res.count}')
         print('\n')
 
     def process_output(self, results, filepaths, sentences):
@@ -32,19 +33,19 @@ class ConsoleFormatter(Formatter):
     def process_output(self, results, filepaths, sentences):
         """Print a breakdown of the most commonly occurring words."""
         doc_id = None
-        for orth, count, matches in results:
-            print(f'\n\n----------- '
-                  f'Found {count} instances of "{spacy_.convert_to_string(orth)}"')
+        for res in results:
+            word = spacy_.convert_to_string(res.orth)
+            print(f'\n\n----------- Found {res.count} instances of "{word}"')
 
-            doc_counts = Counter([m.doc_id for m in matches])
-            for m in matches:
+            doc_counts = Counter([m.doc_id for m in res.matches])
+            for m in res.matches:
                 # we know the matches are ordered by document
                 if m.doc_id != doc_id:
                     doc_id = m.doc_id
-                    count = doc_counts[m.doc_id]
+                    doc_count = doc_counts[m.doc_id]
                     doc_path = filepaths[m.doc_id]
-                    print(f'\n----------- Found {count} times in {doc_path}\n')
-                print(m.format_sentence(sentences))
+                    print(f'\n----------- Found {doc_count} times in {doc_path}\n')
+                print(f'{m.format_sentence(sentences)}\n')
 
 
 class CsvFormatter(Formatter):
@@ -62,10 +63,10 @@ class CsvFormatter(Formatter):
             writer = csv.DictWriter(f, fieldnames=field_names)
             writer.writeheader()
 
-            for orth, count, matches in results:
-                for m in matches:
+            for res in results:
+                for m in res.matches:
                     writer.writerow({
-                        'word': orth,
+                        'word': spacy_.convert_to_string(res.orth),
                         'document': filepaths[m.doc_id],
                         'sentence_number': m.sent_id,
                         'hits': len(m.token_ids),

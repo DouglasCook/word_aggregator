@@ -6,6 +6,7 @@ from word_aggregator.logger import logger
 
 
 Sentence = namedtuple('Sentence', ['id', 'doc_id', 'tokens'])
+Result = namedtuple('Result', ['orth', 'count', 'matches'])
 
 
 class Processor(object):
@@ -41,7 +42,7 @@ class Processor(object):
         """Return list containing matches for given number of most commonly
         occurring words."""
         logger.info('Gathering most common words')
-        most_common = [(orth, count, self.build_matches(orth))
+        most_common = [Result(orth, count, self.build_matches(orth))
                        for orth, count in self.counter.most_common(number)]
         return most_common
 
