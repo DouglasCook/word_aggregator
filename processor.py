@@ -66,7 +66,7 @@ class Processor(object):
         return token.lower
 
     def display_results(self, number):
-        """Disaply results with formatter instance."""
+        """Display results via formatter."""
         self.formatter.display_output(self.get_most_common_words(number),
                                       self.loader.file_paths,
                                       self.sents)
