@@ -23,12 +23,12 @@ class Formatter(object):
             print(f'{word} : {res.count}')
         print('\n')
 
-    def process_output(self, results, filepaths, sentences):
-        pass
-
 
 class ConsoleFormatter(Formatter):
     """Class for formatting output for display in terminal."""
+
+    highlight_start = '\033[91m' # red
+    highlight_end = '\033[0m'
 
     def process_output(self, results, filepaths, sentences):
         """Print a breakdown of the most commonly occurring words."""
@@ -45,19 +45,21 @@ class ConsoleFormatter(Formatter):
                     doc_count = doc_counts[m.doc_id]
                     doc_path = filepaths[m.doc_id]
                     print(f'\n----------- Found {doc_count} times in {doc_path}\n')
-                print(f'{m.format_sentence(sentences)}\n')
+                print(f'{m.format_sentence(sentences, self.highlight_start, self.highlight_end)}\n')
 
 
 class CsvFormatter(Formatter):
     """Class for dumping results to a CSV file."""
 
+    highlight_start = '|'
+    highlight_end = '|'
+
     def process_output(self, results, filepaths, sentences):
         """Write a csv with one row for each sentence containing a match."""
-        logger.info('Writing results to CSV')
-
         field_names = ['word', 'document', 'sentence_number', 'hits', 'sentence']
         now = datetime.now().strftime("%Y%m%d_%H%M%S")
         file_name = f'results_{now}.csv'
+        logger.info(f'Writing results to {file_name}')
 
         with open(file_name, 'w', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=field_names)
@@ -70,5 +72,7 @@ class CsvFormatter(Formatter):
                         'document': filepaths[m.doc_id],
                         'sentence_number': m.sent_id,
                         'hits': len(m.token_ids),
-                        'sentence': m.format_sentence(sentences)
+                        'sentence': m.format_sentence(
+                            sentences, self.highlight_start, self.highlight_end
+                        )
                     })
