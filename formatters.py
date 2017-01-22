@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 from collections import Counter
 
 import word_aggregator.spacy_service as spacy_
@@ -39,9 +40,10 @@ class ConsoleFormatter(Formatter):
             for m in matches:
                 # we know the matches are ordered by document
                 if m.doc_id != doc_id:
-                    print(f'\n----------- Found {doc_counts[m.doc_id]} times in '
-                          f'{filepaths[m.doc_id]}\n')
                     doc_id = m.doc_id
+                    count = doc_counts[m.doc_id]
+                    doc_path = filepaths[m.doc_id]
+                    print(f'\n----------- Found {count} times in {doc_path}\n')
                 print(m.format_sentence(sentences))
 
 
@@ -50,10 +52,13 @@ class CsvFormatter(Formatter):
 
     def process_output(self, results, filepaths, sentences):
         """Write a csv with one row for each sentence containing a match."""
-        field_names = ['word', 'document', 'sentence_number', 'hits', 'sentence']
         logger.info('Writing results to CSV')
 
-        with open('results.csv', 'w', newline='') as f:
+        field_names = ['word', 'document', 'sentence_number', 'hits', 'sentence']
+        now = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f'results_{now}.csv'
+
+        with open(file_name, 'w', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=field_names)
             writer.writeheader()
 
