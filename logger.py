@@ -7,6 +7,6 @@ file_handler.setFormatter(formatter)
 stdout_handler = logging.StreamHandler()
 stdout_handler.setFormatter(formatter)
 
-logger = logging.Logger('github_explorer', level=logging.INFO)
+logger = logging.Logger('word_aggregator', level=logging.INFO)
 logger.addHandler(file_handler)
 logger.addHandler(stdout_handler)

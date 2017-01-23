@@ -39,7 +39,7 @@ class ConsoleFormatter(Formatter):
 
             doc_counts = Counter([m.doc_id for m in res.matches])
             for m in res.matches:
-                # we know the matches are ordered by document
+                # we know the matches are ordered by document so can check for next doc
                 if m.doc_id != doc_id:
                     doc_id = m.doc_id
                     doc_count = doc_counts[m.doc_id]

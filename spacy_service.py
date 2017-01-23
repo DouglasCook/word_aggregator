@@ -9,12 +9,12 @@ NLP = spacy.load('en')
 
 
 def parse_docs(files):
-    """Return generator of all parsed files."""
+    """Return all parsed files as generator."""
     return NLP.pipe(files)
 
 
 def convert_to_string(orth):
-    """Return a string given its id."""
+    """Return a string given its orth id."""
     return NLP.vocab.strings[orth]
 
 

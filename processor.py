@@ -22,12 +22,12 @@ class Processor(object):
         """
         self.loader = loader
         self.formatter = formatter
+        self.lemmatise = lemmatise
         self.sents = []
         self.counter = Counter()
-        self.lemmatise = lemmatise
 
     def process_documents(self):
-        """Build list of sentences in docs and count token occurrences."""
+        """Build a list of sentences contained in docs and count token occurrences."""
         docs = self.load_parsed_docs()
         sent_id = 0
         for doc_id, doc in enumerate(docs):
@@ -38,9 +38,13 @@ class Processor(object):
             self.counter.update(
                 [self.normalise_token(t) for t in doc if spacy_.is_interesting_word(t)])
 
+    def load_parsed_docs(self):
+        """Return parsed versions of all files from loader."""
+        return spacy_.parse_docs(self.loader.read_files())
+
     def get_most_common_words(self, number):
         """Return list containing matches for given number of most commonly
-        occurring words."""
+        occurring words in corpus."""
         logger.info('Gathering most common words')
         most_common = [Result(orth, count, self.build_matches(orth))
                        for orth, count in self.counter.most_common(number)]
@@ -54,10 +58,6 @@ class Processor(object):
             if match_index:
                 all_matches.append(Match(match_index, sent.id, sent.doc_id))
         return all_matches
-
-    def load_parsed_docs(self):
-        """Return parsed versions of all files from loader."""
-        return spacy_.parse_docs(self.loader.read_files())
 
     def normalise_token(self, token):
         """Normalise given token."""

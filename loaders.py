@@ -3,6 +3,7 @@ import glob
 
 from word_aggregator.logger import logger
 
+
 class TextFileLoader(object):
     """Class for reading text files from a directory."""
 
@@ -17,12 +18,6 @@ class TextFileLoader(object):
             logger.info(f'Found file {doc}')
             self.file_paths.append(doc)
             yield self.remove_weirdness(open(doc).read())
-
-    def read_indexed_file(self, doc_id):
-        """Return contents of document with given id."""
-        if doc_id in range(len(self.file_paths)):
-            filepath = os.path.join(self.file_paths[doc_id])
-        return open(filepath).read()
 
     @staticmethod
     def remove_weirdness(text):
